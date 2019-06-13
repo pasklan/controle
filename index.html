@@ -1,0 +1,151 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Controle de Alunos</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div><h2>Cadastro de Alunos</h2></div>
+    <form>
+        <label for="nome">Nome:</label>
+        <input type="text" name="" id="nome"><br>
+        <label for="dtnascimento">DtNascimento:</label>
+        <input type="text" name="" id="dtnascimento"><br>
+        <label for="cpf">CPF:</label>
+        <input type="text" name="" id="cpf"><br>
+        <label for="tel">Telefone:</label>
+        <input type="text" name="" id="telefone"><br>
+        <label for="endereco">Endereço:</label>
+        <input type="text" name="" id="endereco"><br>
+        <label for="sexo">Sexo:</label>
+        <input type="text" name="" id="sexo"><br>  <br> 
+        <button type="button" id="btnAdd" onclick="addAluno();" >
+            Adicionar Aluno
+        </button>
+    </form>
+
+    <table id="tbListar">
+        <thead>
+            <tr>
+            
+                <th>Nome:</th>
+                <th>Dt. Nascimento:</th>
+                <th>CPF:</th>
+                <th>Tel.:</th>
+                <th>End.:</th>
+                <th>Sexo:</th>
+                <th>Apagar:</th>
+                <th>Editar:</th>
+            </tr>
+        </thead>
+    </table>
+</body>
+</html>
+
+<script type="text/javascript">
+//Variável globar que vai guardar os valores da linha atual
+var _linha = null;
+//proximo id a ser incluido na tabela
+var _proximoID = 1;
+//ID do aluno atual a ser editado
+var _ativoID = 0;
+
+    //Função chamada ao se clicar no botão "Adicionar Aluno"
+    function addAluno() {
+        if ($("#btnAdd").text()  == "Atualizar") {
+            //atualiza os valores na tabela
+            atualizaValor(_ativoID);
+        }else{
+            //captura os valores dos campos INPUT do formulário
+            pegavalor();        
+            
+        }
+       //limpa os campos do formulário 
+        limparform();
+        //Mantém o foco para o campo Nome
+        $("#nome").focus();
+    }
+
+    function atualizaValor(id){
+        var linha = $("#tbListar button").;
+
+        console.log(linha);
+
+        //adiciona a linha modificada na tabela
+        $(linha).after(atualizaTabela());
+        //remove a linha antiga
+        $(linha).remove();
+        //limpa o formulário
+        limparform();
+        //muda o texto do botão
+        $("#btnAdd").text("Adicionar Aluno");
+    }
+
+    function atualizaTabela(id){
+        var linha = "<tr>" +
+                    "<td>" + $("#nome").val() + "</td>" +
+                    "<td>" + $("#dtnascimento").val() + "</td>" +
+                    "<td>" + $("#cpf").val() + "</td>" +
+                    "<td>" + $("#telefone").val() + "</td>" +
+                    "<td>" + $("#endereco").val() + "</td>" +
+                    "<td>" + $("#sexo").val() + "</td>" +
+                    "<td>" +
+                        "<button type='button' data-id=" + id + " onclick='apagaLinha(this);'> X </button>" +
+                    "</td>" +
+                    "<td>" +
+                        "<button type='button' data-id=" + id + " onclick='editaLinha(this);'> Editar </button>" +
+                    "</td>" +
+                "</tr>";   
+        return linha;        
+    }
+
+    //Função que captura os valores nos campos e adicionar na tabela
+    function pegavalor(){
+        if ($("#nome").val() != null && $("#nome").val() != '') {
+             if ( $("#tbListar tbody").length == 0) {
+                 $("#tbListar").append("<tbody></tbody>");
+             }
+
+             $("#tbListar tbody").append(atualizaTabela(_proximoID));
+             _proximoID += 1;
+           
+        }
+    }
+    //Remove o registro atual
+    function apagaLinha(botao_apagar) {
+        $(botao_apagar).parents("tr").remove();
+    }
+
+
+    //Função que apaga o conteúdo do formulário para nova Adição
+     function limparform(){
+         $("#nome").val("");
+         $("#dtnascimento").val("");
+         $("#cpf").val("");
+         $("#telefone").val("");
+         $("#endereco").val("");
+         $("#sexo").val("");
+     }
+     //Captura os valores de cada coluna da linha atual e atribui aos campos do formulário
+     function editaLinha(botao_editar) {
+         _linha = $(botao_editar).parents("tr");
+        var cols = _linha.children("td");
+        
+        var _ativoID = $($(cols[6]).children("button")[0]).data("id");   
+        
+        $("#nome").val( $(cols[0]).text() );
+        $("#dtnascimento").val( $(cols[1]).text() );
+        $("#cpf").val( $(cols[2]).text() );
+        $("#telefone").val( $(cols[3]).text() );
+        $("#endereco").val( $(cols[4]).text() );
+        $("#sexo").val( $(cols[5]).text() );
+
+        $("#btnAdd").text("Atualizar");
+     }
+
+</script>
+
+
+
